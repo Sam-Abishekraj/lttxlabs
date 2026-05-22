@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTTX LABS | Learn. Train. Test. eXecute.</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* === CSS VARIABLES === */
+        :root {
+            --bg-dark: #02040a;
+            --bg-blue: #081226;
+            --bg-purple: #130624;
+            --neon-blue: #00d2ff;
+            --neon-purple: #9d4edd;
+            --neon-gold: #ffb703;
+            --neon-green: #00ff88;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(15, 20, 35, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* === RESET & GLOBAL === */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; line-height: 1.6; }
+
+        /* Neural Animated Background */
+        .neural-background {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-blue) 50%, var(--bg-purple) 100%);
+            z-index: -2;
+        }
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: -1; pointer-events: none;
+        }
+
+        h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.2; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* === TYPOGRAPHY & GRADIENTS === */
+        .text-gradient-blue { background: linear-gradient(90deg, var(--neon-blue), #518cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-purple { background: linear-gradient(90deg, #c77dff, var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-gold { background: linear-gradient(90deg, var(--neon-gold), #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-green { background: linear-gradient(90deg, var(--neon-green), #00b35f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* === UTILITIES === */
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: 24px;
+        }
+        .section-padding { padding: 100px 0; }
+        .text-center { text-align: center; }
+
+        /* === BUTTONS === */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            font-family: var(--font-display); font-weight: 600; padding: 16px 32px;
+            border-radius: 12px; cursor: pointer; transition: var(--transition);
+            letter-spacing: 0.5px; border: none; position: relative; overflow: hidden; z-index: 1;
+        }
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; transition: opacity 0.3s ease; opacity: 0;
+        }
+        .btn:hover { transform: translateY(-3px); }
+        .btn:hover::before { opacity: 1; }
+
+        .btn-blue { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
+        .btn-blue::before { background: var(--neon-blue); }
+        .btn-blue:hover { color: #000; box-shadow: 0 0 30px rgba(0, 210, 255, 0.4); }
+
+        .btn-purple { background: rgba(157, 78, 221, 0.1); color: #d896ff; border: 1px solid var(--neon-purple); box-shadow: 0 0 15px rgba(157, 78, 221, 0.2); }
+        .btn-purple::before { background: var(--neon-purple); }
+        .btn-purple:hover { color: #fff; box-shadow: 0 0 30px rgba(157, 78, 221, 0.4); }
+
+        .btn-whatsapp { background: rgba(37, 211, 102, 0.1); color: #25D366; border: 1px solid #25D366; box-shadow: 0 0 15px rgba(37, 211, 102, 0.2); }
+        .btn-whatsapp::before { background: #25D366; }
+        .btn-whatsapp:hover { color: #000; box-shadow: 0 0 30px rgba(37, 211, 102, 0.4); }
+
+        /* === NAVBAR === */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(2, 4, 10, 0.8); backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border); z-index: 1000; padding: 20px 0; transition: all 0.3s ease;
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 800; letter-spacing: 2px; }
+        .logo span { color: var(--neon-blue); }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { font-size: 0.95rem; font-weight: 500; color: var(--text-muted); transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+        .mobile-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
+
+        /* === HERO SECTION === */
+        .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 80px; position: relative; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        
+        .hero-content .tagline {
+            display: inline-block; padding: 8px 16px; border-radius: 30px;
+            border: 1px solid rgba(0, 210, 255, 0.3); background: rgba(0, 210, 255, 0.05);
+            color: var(--neon-blue); font-size: 0.9rem; font-weight: 600; margin-bottom: 24px; letter-spacing: 1px;
+        }
+        .hero-title { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 24px; letter-spacing: -1px; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; max-width: 500px; }
+        .hero-btns { display: flex; gap: 20px; flex-wrap: wrap; }
+
+        /* Custom SVG Interactive Orbit Animation */
+        .hero-visual { perspective: 1000px; display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .interactive-orbit { 
+            width: 100%; height: auto; max-width: 600px; 
+            filter: drop-shadow(0 0 25px rgba(0,210,255,0.15));
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+        }
+        .node { cursor: pointer; transition: all 0.3s ease; }
+        .node:hover { filter: brightness(1.5); }
+        .node-cyan { fill: var(--neon-blue); animation: pulseNode 3s infinite alternate; }
+        .node-purple { fill: var(--neon-purple); animation: pulseNode 4s infinite alternate-reverse; }
+        @keyframes pulseNode { 0% { r: 4.5; filter: brightness(1); } 100% { r: 6.5; filter: brightness(1.5); } }
+
+        /* === HIGHLIGHT STRIP === */
+        .highlight-strip { padding: 40px 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); }
+        .strip-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+        .strip-item i { font-size: 2rem; color: var(--neon-gold); margin-bottom: 16px; }
+        .strip-item h4 { font-size: 1.1rem; color: var(--text-main); }
+
+        /* === COURSE SHOWCASE (UPDATED TO GRID OF 4) === */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 40px; margin-top: 60px; }
+        .course-card { padding: 40px; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: var(--transition); border-top: 2px solid transparent;}
+        
+        .card-data { border-top-color: var(--neon-gold); }
+        .card-data:hover { border-color: var(--neon-gold); box-shadow: 0 10px 40px rgba(255, 183, 3, 0.15); transform: translateY(-10px); }
+        
+        .card-genai { border-top-color: var(--neon-purple); }
+        .card-genai:hover { border-color: var(--neon-purple); box-shadow: 0 10px 40px rgba(157, 78, 221, 0.15); transform: translateY(-10px); }
+        
+        .card-aiml { border-top-color: var(--neon-blue); }
+        .card-aiml:hover { border-color: var(--neon-blue); box-shadow: 0 10px 40px rgba(0, 210, 255, 0.15); transform: translateY(-10px); }
+
+        .card-addons { border-top-color: var(--neon-green); }
+        .card-addons:hover { border-color: var(--neon-green); box-shadow: 0 10px 40px rgba(0, 255, 136, 0.15); transform: translateY(-10px); }
+
+        .course-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 24px; }
+        .icon-data { background: rgba(255, 183, 3, 0.1); color: var(--neon-gold); }
+        .icon-genai { background: rgba(157, 78, 221, 0.1); color: var(--neon-purple); }
+        .icon-aiml { background: rgba(0, 210, 255, 0.1); color: var(--neon-blue); }
+        .icon-addons { background: rgba(0, 255, 136, 0.1); color: var(--neon-green); }
+
+        .course-title { font-size: 2rem; margin-bottom: 16px; }
+        .course-desc { color: var(--text-muted); margin-bottom: 30px; flex-grow: 1; }
+        
+        .topic-list { margin-bottom: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .topic-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #cbd5e1; }
+        .topic-list.list-data i { color: var(--neon-gold); }
+        .topic-list.list-genai i { color: var(--neon-purple); }
+        .topic-list.list-aiml i { color: var(--neon-blue); }
+        .topic-list.list-addons i { color: var(--neon-green); }
+
+        /* === TEAM CAROUSEL SECTION === */
+        .team-section { padding: 100px 0; position: relative; background: linear-gradient(180deg, transparent, rgba(8, 18, 38, 0.5), transparent); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        .team-header { text-align: center; margin-bottom: 60px; }
+        
+        .carousel-container { position: relative; max-width: 1300px; margin: 0 auto; padding: 0 50px; }
+        .carousel-track {
+            display: flex; gap: 30px; overflow-x: auto; scroll-behavior: smooth;
+            scroll-snap-type: x mandatory; padding: 20px 10px;
+            /* Hide scrollbar */
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        
+        .team-card {
+            flex: 0 0 350px; scroll-snap-align: center;
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 40px 30px; text-align: center; position: relative;
+            transition: var(--transition); border-top: 3px solid transparent;
+            overflow: hidden;
+        }
+        
+        /* 3D Inner Glow Effects for Team Cards */
+        .team-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 70%);
+            pointer-events: none;
+        }
+        
+        .team-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 210, 255, 0.15); border-top-color: var(--neon-blue); }
+        
+        .avatar-box {
+            width: 90px; height: 90px; margin: 0 auto 20px; border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5); border: 2px solid var(--glass-border);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2.5rem; color: var(--neon-cyan); position: relative;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2), inset 0 0 15px rgba(0, 210, 255, 0.2);
+            transition: var(--transition);
+        }
+        .team-card:hover .avatar-box { border-color: var(--neon-blue); box-shadow: 0 0 30px rgba(0, 210, 255, 0.5), inset 0 0 20px rgba(0, 210, 255, 0.3); transform: scale(1.05); }
+        
+        .team-name { font-size: 1.4rem; margin-bottom: 5px; font-family: var(--font-display); font-weight: 800; color: var(--text-main); }
+        .team-role { font-size: 1rem; margin-bottom: 15px; color: var(--neon-cyan); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .team-creds {
+            font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;
+            padding-top: 20px; border-top: 1px solid var(--glass-border);
+        }
+        .team-creds span { display: flex; align-items: flex-start; gap: 8px; text-align: left; }
+        .team-creds i { color: var(--neon-gold); margin-top: 3px; }
+
+        .arrow-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(10, 15, 30, 0.8); border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); font-size: 1.2rem; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; z-index: 10; transition: var(--transition);
+            backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+        }
+        .arrow-btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 25px var(--neon-blue); transform: translateY(-50%) scale(1.1); }
+        .arrow-left { left: 0; }
+        .arrow-right { right: 0; }
+
+        /* === WHY LTTX LABS === */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 60px; }
+        .feature-box { text-align: center; padding: 30px 20px; transition: var(--transition); border-radius: 16px;}
+        .feature-box:hover { transform: translateY(-5px); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+        .feature-box i { font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 20px; }
+        .feature-box h4 { font-size: 1.2rem; margin-bottom: 10px; }
+        .feature-box p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* === CTA SECTION === */
+        .cta-section { position: relative; overflow: hidden; padding: 120px 0; text-align: center; }
+        .cta-box { padding: 60px 40px; max-width: 800px; margin: 0 auto; position: relative; z-index: 2; border: 1px solid var(--neon-blue); }
+        .cta-bg-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,210,255,0.1) 0%, transparent 70%); z-index: 1; pointer-events: none;}
+        .cta-title { font-size: 3rem; margin-bottom: 20px; }
+        .cta-btns { display: flex; justify-content: center; gap: 20px; margin-top: 40px; }
+
+        /* === FOOTER === */
+        footer { border-top: 1px solid var(--glass-border); padding: 60px 0 30px; background: rgba(0,0,0,0.5); }
+        .footer-grid { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 40px; }
+        .footer-logo { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; }
+        .footer-tagline { color: var(--text-muted); letter-spacing: 1px; font-size: 0.9rem;}
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px; color: var(--text-muted); font-size: 0.85rem; }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 1024px) {
+            .courses-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 992px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 40px;}
+            .hero-subtitle { margin: 0 auto 40px; }
+            .hero-btns { justify-content: center; }
+            .strip-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+            .topic-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-dark); flex-direction: column; padding: 20px 0; border-bottom: 1px solid var(--glass-border); }
+            .nav-links.active { display: flex; }
+            .mobile-toggle { display: block; }
+            .hero-title { font-size: 2.5rem; }
+            .cta-title { font-size: 2rem; }
+            .cta-btns { flex-direction: column; }
+            .strip-grid { grid-template-columns: 1fr; gap: 30px;}
+            .arrow-btn { display: none; } /* Hide arrows on mobile, let users native swipe */
+            .carousel-container { padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Neural Backgrounds -->
+    <div class="neural-background"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">LTTX<span>.</span></a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="active" style="color: var(--text-main);">Home</a>
+                <a href="analytics.html">Data Analytics</a>
+                <a href="genai.html">Gen AI</a>
+                <a href="aiml.html">AI/ML</a>
+                <a href="addons.html">Add-ons</a>
+                <a href="https://wa.me/918072680271" target="_blank">Contact</a>
+            </div>
+            <i class="fa-solid fa-bars mobile-toggle" id="mobileToggle"></i>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <div class="tagline">Learn. Train. Test. eXecute.</div>
+                <h1 class="hero-title">Build Real Skills.<br><span class="text-gradient-blue">Launch Your Career.</span></h1>
+                <p class="hero-subtitle">Master the future of technology with production-grade AI engineering, Machine Learning, and advanced Data Analytics. Transform from a learner to an industry-ready architect.</p>
+                <div class="hero-btns">
+                    <!-- WhatsApp redirect for Enroll Now -->
+                    <a href="https://wa.me/918072680271" target="_blank" class="btn btn-whatsapp">
+                        <i class="fa-brands fa-whatsapp"></i> Enroll Now
+                    </a>
+                    <a href="#courses" class="btn btn-blue">Explore Courses</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual" id="interactiveVisual">
+                <!-- Innovative Interactive Orbit Design -->
+                <svg class="interactive-orbit" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glowC" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <filter id="glowP" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+
+                    <!-- Center Radar/Crosshairs -->
+                    <g stroke="rgba(255,255,255,0.1)" stroke-width="1.5">
+                        <line x1="200" y1="130" x2="200" y2="270" />
+                        <line x1="130" y1="200" x2="270" y2="200" />
+                        <line x1="150" y1="150" x2="250" y2="250" />
+                        <line x1="150" y1="250" x2="250" y2="150" />
+                    </g>
+
+                    <!-- Concentric Rings -->
+                    <circle cx="200" cy="200" r="30" fill="none" stroke="var(--neon-blue)" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.8">
+                        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="15s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="200" cy="200" r="50" fill="none" stroke="var(--neon-purple)" stroke-width="1" stroke-dasharray="6 8" opacity="0.6">
+                        <animateTransform attributeName="transform" type="rotate" from="360 200 200" to="0 200 200" dur="20s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="200" cy="200" r="75" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="2 4">
+                        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="-360 200 200" dur="25s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <!-- Center Core -->
+                    <circle cx="200" cy="200" r="7" fill="var(--neon-blue)" filter="url(#glowC)" />
+
+                    <!-- Orbit Group 1 -->
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="30s" repeatCount="indefinite"/>
+                        
+                        <!-- Cyan Node 1 -->
+                        <g transform="translate(80, 80)">
+                            <line x1="0" y1="0" x2="40" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-cyan" cx="0" cy="0" r="5" filter="url(#glowC)" />
+                        </g>
+
+                        <!-- Purple Node 1 -->
+                        <g transform="translate(320, 280)">
+                            <line x1="0" y1="0" x2="-40" y2="-26" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-purple" cx="0" cy="0" r="5" filter="url(#glowP)" />
+                        </g>
+
+                        <!-- Cyan Node 2 -->
+                        <g transform="translate(280, 70)">
+                            <line x1="0" y1="0" x2="-26" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-cyan" cx="0" cy="0" r="5" filter="url(#glowC)" />
+                        </g>
+                    </g>
+
+                    <!-- Orbit Group 2 -->
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" from="360 200 200" to="0 200 200" dur="40s" repeatCount="indefinite"/>
+                        
+                        <!-- Purple Node 2 -->
+                        <g transform="translate(100, 300)">
+                            <line x1="0" y1="0" x2="33" y2="-33" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-purple" cx="0" cy="0" r="4.5" filter="url(#glowP)" />
+                        </g>
+                        
+                        <!-- Cyan Node 3 -->
+                        <g transform="translate(350, 180)">
+                            <line x1="0" y1="0" x2="-48" y2="5" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-cyan" cx="0" cy="0" r="4.5" filter="url(#glowC)" />
+                        </g>
+
+                        <!-- Purple Node 3 -->
+                        <g transform="translate(150, 50)">
+                            <line x1="0" y1="0" x2="16" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" />
+                            <circle class="node node-purple" cx="0" cy="0" r="4.5" filter="url(#glowP)" />
+                        </g>
+                    </g>
+
+                    <!-- Free Floating Outer Nodes -->
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="60s" repeatCount="indefinite"/>
+                        <circle class="node node-purple" cx="40" cy="200" r="3.5" filter="url(#glowP)" />
+                        <circle class="node node-cyan" cx="200" cy="360" r="4" filter="url(#glowC)" />
+                        <circle class="node node-purple" cx="340" cy="340" r="3.5" filter="url(#glowP)" />
+                        <circle class="node node-cyan" cx="60" cy="60" r="3" filter="url(#glowC)" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Highlight Strip -->
+    <section class="highlight-strip">
+        <div class="container strip-grid">
+            <div class="strip-item">
+                <i class="fa-solid fa-layer-group"></i>
+                <h4>Intensive Classes</h4>
+            </div>
+            <div class="strip-item">
+                <i class="fa-solid fa-laptop-code"></i>
+                <h4>Hands-on Projects</h4>
+            </div>
+            <div class="strip-item">
+                <i class="fa-solid fa-toolbox"></i>
+                <h4>Industry Tools</h4>
+            </div>
+            <div class="strip-item">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <h4>Live Interactive Sessions</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Course Showcase -->
+    <section class="section-padding" id="courses">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 style="font-size: 2.5rem; margin-bottom: 16px;">Our Premium <span class="text-gradient-blue">Programs</span></h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Intensive crash courses designed to transform raw potential into highly paid, job-ready expertise.</p>
+            </div>
+
+            <div class="courses-grid">
+                
+                <!-- AI / ML Card -->
+                <div class="glass-panel course-card card-aiml">
+                    <div class="course-icon icon-aiml"><i class="fa-solid fa-brain"></i></div>
+                    <h3 class="course-title">Applied AI & <span class="text-gradient-blue">Machine Learning</span></h3>
+                    <p class="course-desc">A deep dive into 12-weeks of mathematical foundations, Machine Learning, Deep Learning (ANN), and NLP.</p>
+                    
+                    <ul class="topic-list list-aiml">
+                        <li><i class="fa-solid fa-check"></i> Math for AI/ML</li>
+                        <li><i class="fa-solid fa-check"></i> Supervised & Unsupervised ML</li>
+                        <li><i class="fa-solid fa-check"></i> Deep Learning & ANN Architecture</li>
+                        <li><i class="fa-solid fa-check"></i> NLP Principles & Deployment</li>
+                    </ul>
+                    
+                    <a href="aiml.html" class="btn btn-blue" style="text-align: center;">View Course Details <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                </div>
+
+                <!-- Gen AI Card -->
+                <div class="glass-panel course-card card-genai">
+                    <div class="course-icon icon-genai"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3 class="course-title">Advanced <span class="text-gradient-purple">Gen AI</span></h3>
+                    <p class="course-desc">Build, automate, and orchestrate intelligent systems. Go beyond basic prompts and build production-ready neural architectures.</p>
+                    
+                    <ul class="topic-list list-genai">
+                        <li><i class="fa-solid fa-check"></i> LLM Applications with Python</li>
+                        <li><i class="fa-solid fa-check"></i> Advanced RAG based Applications</li>
+                        <li><i class="fa-solid fa-check"></i> Autonomous Agents with LangChain</li>
+                        <li><i class="fa-solid fa-check"></i> Multi-Agent Systems & Fine-Tuning</li>
+                    </ul>
+                    
+                    <a href="genai.html" class="btn btn-purple" style="text-align: center;">View Course Details <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                </div>
+
+                <!-- Data Analytics Card -->
+                <div class="glass-panel course-card card-data">
+                    <div class="course-icon icon-data"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3 class="course-title">Data Analytics <span class="text-gradient-gold">& BI</span></h3>
+                    <p class="course-desc">Transform raw data into strategic decisions. Master the complete data lifecycle from statistical foundations to advanced visualization.</p>
+                    
+                    <ul class="topic-list list-data">
+                        <li><i class="fa-solid fa-check"></i> Statistics & Math for Analytics</li>
+                        <li><i class="fa-solid fa-check"></i> Advanced Power BI & Collaboration</li>
+                        <li><i class="fa-solid fa-check"></i> Power Query & Data Cleaning</li>
+                        <li><i class="fa-solid fa-check"></i> Data Modelling & DAX Mastery</li>
+                    </ul>
+                    
+                    <a href="analytics.html" class="btn" style="background: rgba(255, 183, 3, 0.1); color: var(--neon-gold); border: 1px solid var(--neon-gold); text-align: center;">View Course Details <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                </div>
+
+                <!-- Add Ons Card -->
+                <div class="glass-panel course-card card-addons">
+                    <div class="course-icon icon-addons"><i class="fa-solid fa-puzzle-piece"></i></div>
+                    <h3 class="course-title">Essential <span class="text-gradient-green">Add-Ons</span></h3>
+                    <p class="course-desc">Supercharge your resume with vital supplementary skills. Master high-speed aptitude and industry-standard Cloud Services.</p>
+                    
+                    <ul class="topic-list list-addons">
+                        <li><i class="fa-solid fa-check"></i> Quantitative Aptitude</li>
+                        <li><i class="fa-solid fa-check"></i> Logical Reasoning & Deduction</li>
+                        <li><i class="fa-solid fa-check"></i> Azure Cloud Services (Databricks, SQL)</li>
+                        <li><i class="fa-solid fa-check"></i> Big Data (PySpark, Hadoop, Kafka)</li>
+                    </ul>
+                    
+                    <a href="addons.html" class="btn" style="background: rgba(0, 255, 136, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); text-align: center;">Explore Add-ons <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section-padding">
+        <div class="container">
+            <h2 class="text-center" style="font-size: 2.5rem; margin-bottom: 20px;">Why Choose <span class="text-gradient-blue">LTTX LABS</span></h2>
+            
+            <div class="features-grid">
+                <div class="feature-box">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    <h4>Hands-on Learning</h4>
+                    <p>Learn by building real projects and practical examples.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <h4>Industry Tools</h4>
+                    <p>Work with cutting-edge frameworks used by top tech companies.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h4>Real Projects</h4>
+                    <p>Build production-ready applications for your portfolio.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-book-open"></i>
+                    <h4>Structured Curriculum</h4>
+                    <p>Expertly curated roadmap from basics to advanced.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <h4>Job-Ready Skills</h4>
+                    <p>Gain in-demand skills for high-growth technical roles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Carousel Section -->
+    <section class="team-section" id="team">
+        <div class="container">
+            <div class="team-header">
+                <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Meet the <span class="text-gradient-blue">Core Team</span></h2>
+                <p style="color: var(--text-muted);">The architects, mentors, and developers driving LTTX LABS.</p>
+            </div>
+        </div>
+
+        <div class="carousel-container">
+            <!-- Navigation Arrows -->
+            <button class="arrow-btn arrow-left" id="btnLeft"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="arrow-btn arrow-right" id="btnRight"><i class="fa-solid fa-chevron-right"></i></button>
+            
+            <!-- Carousel Track -->
+            <div class="carousel-track" id="teamTrack">
+                
+                <!-- Founder -->
+                <div class="team-card">
+                    <div class="avatar-box"><i class="fa-solid fa-user-astronaut"></i></div>
+                    <h3 class="team-name">Mr. Sam Abishekraj D</h3>
+                    <div class="team-role">Founder & CEO</div>
+                    <div class="team-creds">
+                        <span><i class="fa-solid fa-graduation-cap"></i> BSc Data Science, MSc Computer Science*</span>
+                        <span><i class="fa-solid fa-certificate"></i> IBM Certified AI Developer</span>
+                        <span><i class="fa-solid fa-chalkboard-user"></i> AI/ML & Gen AI Trainer</span>
+                    </div>
+                </div>
+
+                <!-- Co-Founder 1 -->
+                <div class="team-card">
+                    <div class="avatar-box" style="color: var(--neon-purple); border-color: rgba(181, 56, 255, 0.3); box-shadow: 0 0 20px rgba(181, 56, 255, 0.2), inset 0 0 15px rgba(181, 56, 255, 0.2);"><i class="fa-solid fa-user-tie"></i></div>
+                    <h3 class="team-name">Mr. Karthick Manikandan E</h3>
+                    <div class="team-role" style="color: var(--neon-purple);">Co-Founder</div>
+                    <div class="team-creds">
+                        <span><i class="fa-solid fa-graduation-cap"></i> B.E CSE (Hons)</span>
+                        <span><i class="fa-solid fa-database"></i> Data Engineer</span>
+                        <span><i class="fa-solid fa-chalkboard-user"></i> Aptitude Mentor & Cloud Trainer</span>
+                    </div>
+                </div>
+
+                <!-- Co-Founder 2 -->
+                <div class="team-card">
+                    <div class="avatar-box" style="color: var(--neon-gold); border-color: rgba(255, 183, 3, 0.3); box-shadow: 0 0 20px rgba(255, 183, 3, 0.2), inset 0 0 15px rgba(255, 183, 3, 0.2);"><i class="fa-solid fa-code"></i></div>
+                    <h3 class="team-name">Mr. Harrish J</h3>
+                    <div class="team-role" style="color: var(--neon-gold);">Co-Founder</div>
+                    <div class="team-creds">
+                        <span><i class="fa-solid fa-graduation-cap"></i> B.Tech CSBS</span>
+                        <span><i class="fa-brands fa-flutter"></i> Flutter Developer</span>
+                        <span><i class="fa-solid fa-laptop-code"></i> Chief Developer</span>
+                    </div>
+                </div>
+
+                <!-- Chief Advisor -->
+                <div class="team-card">
+                    <div class="avatar-box" style="color: var(--neon-green); border-color: rgba(0, 255, 136, 0.3); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 0 15px rgba(0, 255, 136, 0.2);"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3 class="team-name">Mr. Veeramothinath M</h3>
+                    <div class="team-role" style="color: var(--neon-green);">Chief Advisor</div>
+                    <div class="team-creds">
+                        <span><i class="fa-solid fa-graduation-cap"></i> B.E Mechatronics Engineering</span>
+                        <span><i class="fa-solid fa-gears"></i> Engineering Mentor</span>
+                    </div>
+                </div>
+
+                <!-- CMO -->
+                <div class="team-card">
+                    <div class="avatar-box" style="color: #ff3366; border-color: rgba(255, 51, 102, 0.3); box-shadow: 0 0 20px rgba(255, 51, 102, 0.2), inset 0 0 15px rgba(255, 51, 102, 0.2);"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3 class="team-name">Mr. Devsaahit S</h3>
+                    <div class="team-role" style="color: #ff3366;">Chief Management Officer</div>
+                    <div class="team-creds">
+                        <span><i class="fa-solid fa-graduation-cap"></i> BSc, MBA*</span>
+                        <span><i class="fa-solid fa-bullseye"></i> Operations & Strategy</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-bg-glow"></div>
+        <div class="container">
+            <div class="glass-panel cta-box">
+                <h2 class="cta-title">Start Your <span class="text-gradient-blue">Learning Journey</span> Today</h2>
+                <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto;">Join the next cohort of elite engineers and analysts. Limited seats available for our upcoming batches.</p>
+                
+                <div class="cta-btns">
+                    <a href="https://wa.me/918072680271" target="_blank" class="btn btn-blue" style="padding: 18px 40px; font-size: 1.1rem;">Enroll Now</a>
+                    <a href="https://wa.me/918072680271" target="_blank" class="btn" style="padding: 18px 40px; font-size: 1.1rem; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff;">
+                        <i class="fa-brands fa-whatsapp me-2"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">LTTX<span style="color: var(--neon-blue);">.</span> LABS</div>
+                    <div class="footer-tagline mt-2">Learn. Train. Test. eXecute.</div>
+                </div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <a href="index.html" style="color: var(--text-main); transition: color 0.3s;"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="analytics.html" style="color: var(--text-muted); transition: color 0.3s;"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+                    <a href="genai.html" style="color: var(--text-muted); transition: color 0.3s;"><i class="fa-solid fa-network-wired"></i> Gen AI</a>
+                    <a href="aiml.html" style="color: var(--text-muted); transition: color 0.3s;"><i class="fa-solid fa-brain"></i> AI/ML</a>
+                    <a href="addons.html" style="color: var(--text-muted); transition: color 0.3s;"><i class="fa-solid fa-puzzle-piece"></i> Add-ons</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 LTTX LABS. All rights reserved. Elevating the standard of tech education.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Javascript -->
+    <script>
+        // Mobile Menu
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Team Carousel Logic
+        const track = document.getElementById('teamTrack');
+        const btnLeft = document.getElementById('btnLeft');
+        const btnRight = document.getElementById('btnRight');
+        
+        // Scroll amount is roughly the width of a card + gap
+        const scrollAmount = 380; 
+
+        btnRight.addEventListener('click', () => {
+            track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+
+        btnLeft.addEventListener('click', () => {
+            track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+
+        // Interactive 3D Orbit Parallax
+        const heroVisual = document.getElementById('interactiveVisual');
+        const orbitSvg = document.querySelector('.interactive-orbit');
+
+        if (heroVisual && orbitSvg) {
+            heroVisual.addEventListener('mousemove', (e) => {
+                const rect = heroVisual.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation (max 15 degrees)
+                const rotateX = ((y - centerY) / centerY) * -15; 
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                orbitSvg.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            heroVisual.addEventListener('mouseleave', () => {
+                orbitSvg.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+            });
+        }
+    </script>
+</body>
+</html>
